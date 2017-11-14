@@ -194,8 +194,6 @@ void Game::formatWalls()
 
 			int r = walls[i].row;
 			int c = walls[i].col;
-			
-			//formatts the walls based on other walls
 
 			if (!isWall(r + 1, c) && !isWall(r - 1, c) && !isWall(r, c + 1) && !isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block.png");
@@ -242,14 +240,26 @@ void Game::formatWalls()
 			else if (isWall(r + 1, c) && !isWall(r - 1, c) && !isWall(r, c + 1) && isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block18.png");
 			}
+			else if (!isWall(r + 1, c) && isWall(r - 1, c) && isWall(r, c + 1) && isWall(r, c - 1) && !isWall(r - 1, c + 1) && !isWall(r - 1, c - 1)) {
+				walls[i].setImage("Images/Blocks/block27.png");
+			}
 			else if (!isWall(r + 1, c) && isWall(r - 1, c) && isWall(r, c + 1) && isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block8.png");
+			}
+			else if (isWall(r + 1, c) && isWall(r - 1, c) && !isWall(r, c + 1) && isWall(r, c - 1) && !isWall(r + 1, c - 1) && !isWall(r - 1, c - 1)) {
+				walls[i].setImage("Images/Blocks/block25.png");
 			}
 			else if (isWall(r + 1, c) && isWall(r - 1, c) && !isWall(r, c + 1) && isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block6.png");
 			}
+			else if (isWall(r + 1, c) && isWall(r - 1, c) && isWall(r, c + 1) && !isWall(r, c - 1) && !isWall(r - 1, c + 1) && !isWall(r + 1, c + 1)) {
+				walls[i].setImage("Images/Blocks/block26.png");
+			}
 			else if (isWall(r + 1, c) && isWall(r - 1, c) && isWall(r, c + 1) && !isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block14.png");
+			}
+			else if (isWall(r + 1, c) && !isWall(r - 1, c) && isWall(r, c + 1) && isWall(r, c - 1) && !isWall(r + 1, c + 1) && !isWall(r + 1, c - 1)) {
+				walls[i].setImage("Images/Blocks/block24.png");
 			}
 			else if (isWall(r + 1, c) && !isWall(r - 1, c) && isWall(r, c + 1) && isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block15.png");
