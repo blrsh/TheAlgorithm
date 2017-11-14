@@ -194,6 +194,8 @@ void Game::formatWalls()
 
 			int r = walls[i].row;
 			int c = walls[i].col;
+			
+			//formatts the walls based on other walls
 
 			if (!isWall(r + 1, c) && !isWall(r - 1, c) && !isWall(r, c + 1) && !isWall(r, c - 1)) {
 				walls[i].setImage("Images/Blocks/block.png");
