@@ -19,6 +19,8 @@ sf::Texture tx;
 sf::View view;
 sf::Vector2f position(0, 0);
 
+bool paused = false;
+
 Game::Game()
 {
 
@@ -36,8 +38,10 @@ Game::Game()
 	view.setViewport(sf::FloatRect(0, 0, 1, 1));
 	while (window.isOpen())
 	{
-		keyboard(window);
-		loop();
+		if (!paused) {
+			keyboard(window);
+			loop();
+		}
 		events(window);
 		render(window);
 	}
@@ -87,22 +91,27 @@ void Game::events(sf::RenderWindow & window) {
 		if (event.type == sf::Event::Closed) window.close();
 
 		if (event.type == sf::Event::KeyPressed) {
-			if (event.key.code == sf::Keyboard::C) {
-				walls.clear();
-			}
-			if (event.key.code == sf::Keyboard::P) {
-				int r = (int)(sf::Mouse::getPosition(window).y + position.y) / 64;
-				int c = (int)(sf::Mouse::getPosition(window).x + position.x) / 64;
-				if (!isWall(r, c)) {
-					walls.push_back(Wall(r, c, true));
-					formatWalls();
+			if (!paused) {
+				if (event.key.code == sf::Keyboard::C) {
+					walls.clear();
+				}
+				if (event.key.code == sf::Keyboard::P) {
+					int r = (int)(sf::Mouse::getPosition(window).y + position.y) / 64;
+					int c = (int)(sf::Mouse::getPosition(window).x + position.x) / 64;
+					if (!isWall(r, c)) {
+						walls.push_back(Wall(r, c, true));
+						formatWalls();
+					}
+				}
+				if (event.key.code == sf::Keyboard::X) {
+					saveLevel();
+				}
+				if (event.key.code == sf::Keyboard::Z) {
+					loadLevel();
 				}
 			}
-			if (event.key.code == sf::Keyboard::X) {
-				saveLevel("Levels/demo");
-			}
-			if (event.key.code == sf::Keyboard::Z) {
-				loadLevel("Levels/demo");
+			if (event.key.code == sf::Keyboard::Escape) {
+				paused = !paused;
 			}
 		}
 
@@ -304,24 +313,47 @@ int Game::whichWall(int row, int col)
 	return -1;
 }
 
-void Game::saveLevel(std::string fname)
+void Game::saveLevel()
 {
+	paused = true;
 	ofstream f;
-	f.open(fname + ".txt");
-	for (int i = 0; i < walls.size(); i++) {
-		f << walls[i].row << " " << walls[i].col << endl;
+	string fname;
+	cout << "SAVE LEVEL" << endl;
+	cout << "Level Name (or type 'nevermind'):";
+	cin >> fname;
+	if (fname != "nevermind") {
+		f.open("Levels/" + fname + ".txt");
+		for (int i = 0; i < walls.size(); i++) {
+			f << walls[i].row << " " << walls[i].col << endl;
+		}
+		f.close();
+		cout << "Level Saved." << endl;
 	}
-	f.close();
+	paused = false;
 }
 
-void Game::loadLevel(string fname) {
-	ifstream f(fname + ".txt");
+void Game::loadLevel() {
+	paused = true;
+	string fname;
+	cout << "LOAD LEVEL" << endl;
+	cout << "Level Name (or type 'nevermind'):";
+	cin >> fname;
 
-	int r;
-	int c;
-	walls.clear();
-	while (f >> r >> c) {
-		walls.push_back(Wall(r, c));
-		formatWalls();
+	if (fname != "nevermind") {
+		ifstream f("Levels/" + fname + ".txt");
+
+		int r;
+		int c;
+		walls.clear();
+		while (f >> r >> c) {
+			cout << "Loading Item (" << r << ", " << c << ")" << endl;
+			walls.push_back(Wall(r, c));
+			formatWalls();
+		}
+		f.close();
+
+		cout << "Level Loaded" << endl;
 	}
+	paused = false;
 }
+
